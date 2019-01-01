@@ -447,16 +447,20 @@ def selPalabras(palabras, seleccionadas):
 
 def listado(palabras):
 
-    print("Palabras disponibles: \n")
+    print("\n    Palabras disponibles:\n")
 
     for i in palabras:
-        print(i)
+        print("          "+i)
 
-    input("\nPresione enter para continuar...")
+    input("\n    Presione enter para continuar...")
 
 def creditos():
 
-    input("""Elaborado por:\n\nDavid L. Chacón G.\n25.023.230\nComputacion I Seccion X\n\nPresione enter para continuar...""")
+    print("\n    Elaborado por:\n")
+    print("    David L. Chacón G.")
+    print("    25.023.230")
+    print("    @DavidL28D\n")
+    input("    Presione enter para continuar...")
 
 def menu():
 

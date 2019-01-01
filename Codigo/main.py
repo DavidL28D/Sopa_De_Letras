@@ -11,20 +11,27 @@ def verSopa(sopa):
             print(sopa[fil][col], end=" ")
         print()
 
+def jugar(seleccionadas, sopa, controlador):
+
+    print("\n*** Sopa ***\n")
+    verSopa(sopa)
+    input()
+
 def constSopa(seleccionadas, sopa, controlador):
 
     # sopa[filas][columnas]
-    # controlador[palabra, sentido, estado, x, y]
-    sopaAux = sopa
-
+    # controlador[palabra, estado, xi, yi, xf, yf]
+    
     for fil in range(20):
         sopa.append([])
         for col in range(20):
             sopa[fil].append("*")
 
-    print(seleccionadas)
+    # print(seleccionadas)
 
     for i in seleccionadas:
+
+        sopaAux = [row[:] for row in sopa]
 
         # Donde
         # 0 N
@@ -36,8 +43,7 @@ def constSopa(seleccionadas, sopa, controlador):
         # 6 O
         # 7 NO
 
-        #s = random.randrange(8)
-        s = 0
+        s = random.randrange(8)
         lon = len(i)
         
         flag = True
@@ -56,61 +62,234 @@ def constSopa(seleccionadas, sopa, controlador):
 
                     for letra in i:
 
-                        if sopa[yA][x] == letra or sopa[yA][x] == "*":
-                            #print("revisando si "+letra+" es igual a "+sopa[yA][x])
-                            sopaAux[yA][x] = letra
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][x])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
                             yA -= 1
-
+                            
                         else:
-
+                            
                             flag = True
-                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ")")
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
                             break
+
+                    yA += 1
 
                 else:
 
                     flag = True
-                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ")")
-
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    
             elif s == 1: # NE
-                pass
 
+                if y - lon >= 0 and x + lon <= 20:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            yA -= 1
+                            xA += 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+                    
+                    yA += 1
+                    xA -= 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
+                    
             elif s == 2: # E
-                pass
+                
+                if x + lon <= 20:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            xA += 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+
+                    xA -= 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
 
             elif s == 3: # SE
-                pass
+
+                if y + lon <= 20 and x + lon <= 20:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            yA += 1
+                            xA += 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+
+                    yA -= 1
+                    xA -= 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
 
             elif s == 4: # S
-                pass
+
+                if y + lon <= 20:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            yA += 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+                    
+                    yA -= 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
 
             elif s == 5: # SO
-                pass
+
+                if y + lon <= 20 and x - lon >= 0:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            yA += 1
+                            xA -= 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+
+                    yA -= 1
+                    xA += 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
 
             elif s == 6: # O
-                pass
+
+                if x - lon >= 0:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            xA -= 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+
+                    xA += 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
 
             elif s == 7: # NO
-                pass
-        
-            if flag:
 
-                sopaAux = sopa
+                if y - lon >= 0 and x - lon >= 0:
+
+                    for letra in i:
+
+                        #print("revisando si "+letra+" es igual a "+sopa[yA][xA])
+
+                        if sopa[yA][xA] == letra or sopa[yA][xA] == "*":
+
+                            sopaAux[yA][xA] = letra
+                            yA -= 1
+                            xA -= 1
+
+                        else:
+
+                            #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por choque " + str(flag))
+                            flag = True
+                            break
+                    
+                    yA += 1
+                    xA += 1
+
+                else:
+
+                    #print("no se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") por espacio " + str(flag))
+                    flag = True
+        
+
+            if flag:
+                
+                sopaAux = [row[:] for row in sopa]
 
             else:
+                
+                #print("se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ") " + str(flag))
+                sopa = [row[:] for row in sopaAux]
 
-                print("se puede sampar la palabra " + i + " - "+ str(lon) + " - en las coordenadas (" + str(x) + ", " + str(y) + ")")
-                sopa = sopaAux
-
-        controlador.append([i, 0, s, x, y])
-
-    print(controlador)
-    verSopa(sopa)
-    input("\nPresione cualquier tecla para continuar...")
-
-
-
-
+        controlador.append([i, 0, x, y, xA, yA])
+        
+    #print(controlador)
+    #print("*** Sopa ***\n")
+    #verSopa(sopa)
+    #input("\nPresione cualquier tecla para continuar...")
+    return sopa
+    
 def selPalabras(palabras, seleccionadas):
 
     for i in range(5):
@@ -137,7 +316,6 @@ def selPalabras(palabras, seleccionadas):
     #print(seleccionadas)
     #input("\nPresione cualquier tecla para continuar...")
 
-
 def listado(palabras):
 
     print("Palabras disponibles: \n")
@@ -147,16 +325,14 @@ def listado(palabras):
 
     input("\nPresione cualquier tecla para continuar...")
 
-
 def creditos():
 
-    print("""Elaborado por:\n\nDavid L. Chacón G.\n25.023.230\nComputacion I Seccion X\n\nPresione cualquier tecla para continuar...""")
-    input()
-
+    input("""Elaborado por:\n\nDavid L. Chacón G.\n25.023.230\nComputacion I Seccion X\n\nPresione cualquier tecla para continuar...""")
 
 def menu():
 
-    palabras = ("ABACO", "BEBE", "CABALGAR", "DUENDE", "ESTIVA", "FUENTE", "GUANTES", "HUESO", "IDEAS", "JARRON", "KILO", "MONO", "NAUTILUS", "OBELISCO", "PETROLEO", "QUEBRAR", "RABANO", "SAPO", "TIA", "UVAS")
+    game = False
+    palabras = ("ABACO", "BEBE", "CABALGAR", "DUENDE", "EXITO", "FUENTE", "GUANTES", "HUESO", "IDEAS", "JARRON", "KILO", "MONO", "NAUTILUS", "OBELISCO", "PETROLEO", "QUEBRAR", "RABANO", "SAPO", "TIA", "UVAS")
 
     seleccionadas = []
     sopa = []
@@ -192,10 +368,20 @@ def menu():
                 sopa = []
 
                 selPalabras(palabras, seleccionadas)
-                constSopa(seleccionadas, sopa, controlador)
+                sopa = constSopa(seleccionadas, sopa, controlador)
+
+                game = True
+                jugar(seleccionadas, sopa, controlador)
 
             elif x == 3:
-                print("opcion 3")
+
+                if game:
+
+                    jugar(seleccionadas, sopa, controlador)
+
+                else:
+
+                    input("No existe un juego nuevo, por favor selecciona antes la opcion 2...")
 
             elif x == 4:
 

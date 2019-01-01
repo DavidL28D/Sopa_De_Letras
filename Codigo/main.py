@@ -19,31 +19,11 @@ def getch():
 def limpiar():
     os.system('clear')
 
-def verSopa(sopa, x, y, controlador):
-
-    ("""
-    print()
-    for fil in range(20):
-        print("    ", end="")
-        for col in range(20):
-
-            if y == fil and x == col:
-                print(Fore.BLUE+sopa[fil][col]+Fore.RESET, end=" ")
-            else:
-                print(sopa[fil][col], end=" ")
-
-        print()
-    """)
+def verSopa(sopa, x, y, controlador, coordenadas, wait):
 
     for fil in range(20):
         for col in range(20):
             print(Cursor.POS(2*(fil+3), col+4)+sopa[fil][col])
-
-    ("""
-    fil = controlador[0][3]
-    col = controlador[0][4]
-    print(Cursor.POS(2*(fil+3), col+4)+Fore.BLUE+sopa[fil][col]+Fore.RESET)
-    """)
 
     for i in range(5):
 
@@ -100,34 +80,40 @@ def verSopa(sopa, x, y, controlador):
 
                     print(Cursor.POS(2*(fil-j+3), col-j+4)+Fore.BLUE+sopa[fil-j][col-j]+Fore.RESET)
 
-    
+    if wait:
+        print(Cursor.POS(2*(coordenadas[0]+3), coordenadas[1]+4)+Fore.GREEN+sopa[coordenadas[0]][coordenadas[1]]+Fore.RESET)
+
     print(Cursor.POS(2*(x+3), y+4)+Fore.RED+sopa[x][y]+Fore.RESET)
                 
-def jugar(seleccionadas, sopa, controlador):
+def jugar(seleccionadas, sopa, controlador, encontradas):
 
     x = y = 0
     xi = yi = xf = yf = 0
     wait = False
+    coordenadas = [0,0]
 
     while True:
 
         limpiar()
-
-        print(Cursor.POS(14, 2)+"*** Sopa de letras ***") 
-        verSopa(sopa, x, y, controlador)
-        print(Cursor.POS(50, 6)+"Palabras Disponibles:") 
+        
+        print(Cursor.POS(14, 2)+Fore.RED+"*** Sopa de letras ***"+Fore.RESET) 
+        verSopa(sopa, x, y, controlador, coordenadas, wait)
+        print(Cursor.POS(50, 5)+Fore.YELLOW+"Palabras Disponibles:"+Fore.RESET) 
 
         for i in range(5):
             if(controlador[i][2] == 1):
-                print(Cursor.POS(55, 8+i)+Fore.GREEN+controlador[i][0]+Fore.RESET)
+                print(Cursor.POS(55, 7+i)+Fore.GREEN+controlador[i][0]+Fore.RESET)
             else:
-                print(Cursor.POS(55, 8+i)+controlador[i][0])
+                print(Cursor.POS(55, 7+i)+controlador[i][0])
 
-        print(Cursor.POS(50, 15)+"Instrucciones:")
-        print(Cursor.POS(50, 17)+"x = Salir.")
-        print(Cursor.POS(50, 18)+"i = Inicio de palabra.")
-        print(Cursor.POS(50, 19)+"f = Final de palabra.")
-        print(Cursor.POS(50, 20)+"Movimiento = Pad direccional."+Cursor.POS(0, 0))
+        print(Cursor.POS(52, 14)+Fore.MAGENTA+"Instrucciones:"+Fore.RESET)
+        print(Cursor.POS(50, 16)+"x = Salir.")
+        print(Cursor.POS(50, 17)+"i = Inicio de palabra.")
+        print(Cursor.POS(50, 18)+"f = Final de palabra.")
+        print(Cursor.POS(50, 19)+"w = Arriba.")
+        print(Cursor.POS(50, 20)+"a = Izquierda.")
+        print(Cursor.POS(50, 21)+"s = Abajo.")
+        print(Cursor.POS(50, 22)+"d = Derecha."+Cursor.POS(0, 0))
 
         tecla = str.lower(getch())
 
@@ -135,14 +121,39 @@ def jugar(seleccionadas, sopa, controlador):
             break
 
         elif tecla == "i" and not wait:
+
             xi = x
             yi = y
             wait = True
+            coordenadas = [x, y]
         
         elif tecla == "f" and wait:
+            
+            encontro = False
+
             xf = x
             yf = y
+
+            for i in range(5):
+
+                if controlador[i][3] == xi and controlador[i][4] == yi and controlador[i][5] == xf and controlador[i][6] == yf:
+                    controlador[i][2] = 1
+                    encontradas += 1
+                    encontro = True
+
             wait = False
+
+            if encontradas == 5:
+
+                limpiar()
+                input(Cursor.POS(5, 3)+Fore.CYAN+"¡¡¡ FELICIDADES, HAS GANADO !!!"+Fore.RESET+Cursor.POS(0, 0))
+
+                return sopa, controlador, False, encontradas
+
+            elif not encontro:
+
+                print(Cursor.POS(14, 25)+Fore.RED+"PALABRA NO ENCONTRADA..."+Fore.RESET+Cursor.POS(0, 0))
+                getch()
 
         elif tecla == "w":
             if y - 1 >= 0:
@@ -160,9 +171,7 @@ def jugar(seleccionadas, sopa, controlador):
             if x + 1 <= 19:
                 x+= 1
 
-            
-
-    return sopa, controlador
+    return sopa, controlador, True, encontradas
 
 def constSopa(seleccionadas, sopa, controlador):
 
@@ -396,16 +405,16 @@ def constSopa(seleccionadas, sopa, controlador):
                 
                 sopa = [row[:] for row in sopaAux]
 
-        controlador.append([i, s, 1, x, y, xA, yA])
+        controlador.append([i, s, 0, x, y, xA, yA])
         
     #print(controlador)
     #print("*** Sopa ***\n")
     #verSopa(sopa, 0, 0, controlador)
-    #input("\nPresione cualquier tecla para continuar...")
+    #input("\nPresione enter para continuar...")
 
     for fil in range(20):
         for col in range(20):
-            if sopa[fil][col] == ".":
+            if sopa[fil][col] == "*":
                 sopa[fil][col] = random.choice(string.ascii_uppercase)
 
     return sopa
@@ -434,7 +443,7 @@ def selPalabras(palabras, seleccionadas):
         seleccionadas.append(palabras[x])
 
     #print(seleccionadas)
-    #input("\nPresione cualquier tecla para continuar...")
+    #input("\nPresione enter para continuar...")
 
 def listado(palabras):
 
@@ -443,14 +452,15 @@ def listado(palabras):
     for i in palabras:
         print(i)
 
-    input("\nPresione cualquier tecla para continuar...")
+    input("\nPresione enter para continuar...")
 
 def creditos():
 
-    input("""Elaborado por:\n\nDavid L. Chacón G.\n25.023.230\nComputacion I Seccion X\n\nPresione cualquier tecla para continuar...""")
+    input("""Elaborado por:\n\nDavid L. Chacón G.\n25.023.230\nComputacion I Seccion X\n\nPresione enter para continuar...""")
 
 def menu():
 
+    encontradas = 0
     game = False
     palabras = ("ABACO", "BEBE", "CABALGAR", "DUENDE", "EXITO", "FUENTE", "GUANTES", "HUESO", "IDEAS", "JARRON", "KILO", "MONO", "NAUTILUS", "OBELISCO", "PETROLEO", "QUEBRAR", "RABANO", "SAPO", "TIA", "UVAS")
 
@@ -488,16 +498,16 @@ def menu():
                 sopa = []
 
                 selPalabras(palabras, seleccionadas)
+
                 sopa = constSopa(seleccionadas, sopa, controlador)
 
-                game = True
-                jugar(seleccionadas, sopa, controlador)
+                sopa, controlador, game, encontradas = jugar(seleccionadas, sopa, controlador, encontradas)
 
             elif x == 3:
 
                 if game:
 
-                    jugar(seleccionadas, sopa, controlador)
+                    sopa, controlador, game, encontradas = jugar(seleccionadas, sopa, controlador, encontradas)
 
                 else:
 

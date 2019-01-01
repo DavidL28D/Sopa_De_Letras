@@ -471,14 +471,14 @@ def menu():
     while True:
 
         limpiar()
-        print("*** Sopa de letras***\n")
-        print("1.- Ver listado de palabras.")
-        print("2.- Nueva sopa de letras.")
-        print("3.- Continuar con la ultima sopa de letras.")
-        print("4.- Creditos.")
-        print("0.- Salir.")
+        print("\n   *** Sopa de letras ***\n")
+        print("   1.- Ver listado de palabras.")
+        print("   2.- Nueva sopa de letras.")
+        print("   3.- Continuar con la ultima sopa de letras.")
+        print("   4.- Creditos.")
+        print("   0.- Salir.")
 
-        x = int(input("\nIngrese la opcion: "))
+        x = int(input("\n   Ingrese la opcion: "))
 
         if x >= 0 and x<=4:
 
